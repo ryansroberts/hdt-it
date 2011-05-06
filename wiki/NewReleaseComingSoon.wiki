@@ -1,0 +1,5 @@
+#summary New Release...Coming Soon
+
+= Introduction =
+
+We are preparing the 1.0 Release! It will be released soon (1-2 weeks). Please deprecate 0.7 version. 
