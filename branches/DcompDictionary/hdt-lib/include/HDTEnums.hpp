@@ -136,7 +136,9 @@ enum RDFNotation {
 	 *
 	 * @see <a href="http://en.wikipedia.org/wiki/Notation_3">Wikipedia</a>
 	 */
-	N3
+	N3,
+
+	NQUAD
 };
 
 enum ResultEstimationType {
