@@ -7,7 +7,7 @@
 QT       += core gui opengl
 
 CONFIG += debug_and_release
-macx:CONFIG += x86 x86_64
+macx:CONFIG += x86_64
 
 TARGET = HDT-it
 TEMPLATE = app
