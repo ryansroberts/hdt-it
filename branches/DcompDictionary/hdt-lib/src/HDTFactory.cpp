@@ -44,6 +44,7 @@
 
 #include "dictionary/PlainDictionary.hpp"
 #include "dictionary/PFCDictionary.hpp"
+#include "dictionary/PFCPlusDictionary.hpp"
 
 #include "triples/TriplesList.hpp"
 #ifndef WIN32
@@ -116,7 +117,10 @@ Dictionary *HDTFactory::readDictionary(ControlInformation &controlInformation) {
 		return new PlainDictionary();
 	} else if(type==HDTVocabulary::DICTIONARY_TYPE_PFC) {
 		return new PFCDictionary();
+	} else if(type==HDTVocabulary::DICTIONARY_TYPE_PFCPLUS) {
+		return new PFCPlusDictionary();
 	}
+
 
 	throw "Dictionary Implementation not available";
 }

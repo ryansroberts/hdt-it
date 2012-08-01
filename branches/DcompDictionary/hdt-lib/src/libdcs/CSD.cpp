@@ -51,7 +51,7 @@ CSD * CSD::load(ifstream & fp)
 	case HTFC: return CSD_HTFC::load(fp);
 	case PFC: return CSD_PFC::load(fp);
 	//	case REPAIRDAC: return CSD_RePairDAC::load(fp);
-	//	case FMINDEX: return CSD_FMIndex::load(fp);
+	case FMINDEX: return CSD_FMIndex::load(fp);
 	//	case HASHHUFF: return CSD_HashHuff::load(fp);
 	/*
 	 * case DELTA: return URICDDelta::load(fp);

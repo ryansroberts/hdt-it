@@ -308,25 +308,25 @@ void PFCDictionary::save(std::ostream & output, ControlInformation & controlInfo
 
 	iListener.setRange(0,10);
 	iListener.notifyProgress(0, "Dictionary save shared area.");
-	//cout << "Save shared " << out->tellp() << endl;
+	cout << "Save shared " << out->tellp() << endl;
 	shared->save(*out);
 
 	iListener.setRange(10,45);
 	iListener.notifyProgress(0, "Dictionary save subjects.");
-	//cout << "Save subjects " << out->tellp() << endl;
+	cout << "Save subjects " << out->tellp() << endl;
 	subjects->save(*out);
 
 	iListener.setRange(45,60);
 	iListener.notifyProgress(0, "Dictionary save predicates.");
-	//cout << "Save predicates " << out->tellp() << endl;
+	cout << "Save predicates " << out->tellp() << endl;
 	predicates->save(*out);
 
 	iListener.setRange(60,100);
 	iListener.notifyProgress(0, "Dictionary save objects.");
-	//cout << "Save objects " << out->tellp() << endl;
+	cout << "Save objects " << out->tellp() << endl;
 	objects->save(*out);
 
-	//cout << "Dictionary saved " << out->tellp() << endl;
+	cout << "Dictionary saved " << out->tellp() << endl;
 }
 
 

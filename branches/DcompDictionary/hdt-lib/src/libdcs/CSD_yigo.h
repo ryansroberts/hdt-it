@@ -37,7 +37,6 @@
 #include <iostream>
 #include <fstream>
 #include <cassert>
-#include <vector>
 using namespace std;
 
 #include <libcdsBasics.h>
@@ -45,50 +44,15 @@ using namespace cds_utils;
 
 namespace csd
 {
-static const uint32_t PFC = 2;
-static const uint32_t HTFC = 3;
-static const uint32_t FMINDEX = 4;
-static const uint32_t REPAIRDAC = 5;
-static const uint32_t HASHHUFF = 6;
-
-class IteratorUCharString {
-public:
-	virtual bool hasNext() {
-		return false;
-	}
-
-	virtual unsigned char *next() {
-		return 0;
-	}
-
-	virtual unsigned int getNumberOfElements() {
-		return 0;
-	}
-};
-
-class VectorIteratorUCharString : public IteratorUCharString {
-private:
-	std::vector<std::string> &vector;
-	unsigned int pos;
-public:
-	VectorIteratorUCharString(std::vector<std::string> &vector) : vector(vector), pos(0){
-
-	}
-
-	virtual bool hasNext() {
-		return pos<vector.size();
-	}
-
-	virtual unsigned char *next() {
-		return (unsigned char *)vector[pos++].c_str();
-	}
-};
-
+static const size_t PFC = 2;
+static const size_t HTFC = 3;
+static const size_t FMINDEX = 4;
+static const size_t REPAIRDAC = 5;
+static const size_t HASHHUFF = 6;
 
 class CSD
 {		
-  public:
-	CSD();
+  public:			
     /** General destructor */
     virtual ~CSD() {};
 
@@ -97,22 +61,25 @@ class CSD
 	@s: the string to be located.
 	@len: the length (in characters) of the string s.
     */
-    virtual uint32_t locate(const uchar *s, uint32_t len)=0;
+    virtual size_t locate(uchar *s, size_t len)=0;
 
     /** Returns the string identified by id.
 	@id: the identifier to be extracted.
     */
-    virtual uchar * extract(uint32_t id)=0;
+    virtual uchar * extract(size_t id)=0;
+
+    /** Obtains the original Tdict from its CSD representation. Each string is
+	separated by '\n' symbols.
+	@dict: the plain uncompressed dictionary.
+	@return: number of total symbols in the dictionary.
+    */
+    virtual uint decompress(uchar **dict)=0;
 
     /** Returns the size of the structure in bytes. */
-    virtual uint64_t getSize()=0;
-
-    virtual void dumpAll()=0;
+    virtual size_t getSize()=0;
 
     /** Returns the number of strings in the dictionary. */
-    uint32_t getLength();
-
-    virtual void fillSuggestions(const char *base, vector<string> &out, int maxResults)=0;
+    size_t getLength();
 
     /** Stores a CSD structure given a file pointer.
 	@fp: pointer to the file saving a CSD structure.
@@ -124,17 +91,17 @@ class CSD
     static CSD * load(ifstream & fp);
 		
   protected:
-    uint32_t type; 	//! Dictionary type.
-    uint32_t tlength;	//! Original Tdict size.
-    uint32_t length;	//! Number of elements in the dictionary.
-    uint32_t maxlength; 	//! Length of the largest string in the dictionary.
+    size_t type; 	//! Dictionary type.
+    size_t tlength;	//! Original Tdict size.
+    size_t length;	//! Number of elements in the dictionary.
+    size_t maxlength; 	//! Length of the largest string in the dictionary.
   };
 };
 
 #include "CSD_PFC.h"
+#include "CSD_RePairDAC.h"
 #include "CSD_HTFC.h"
-//#include "CSD_RePairDAC.h"
 #include "CSD_FMIndex.h"
-//#include "CSD_HashHuff.h"
+#include "CSD_HashHuff.h"
 
 #endif  

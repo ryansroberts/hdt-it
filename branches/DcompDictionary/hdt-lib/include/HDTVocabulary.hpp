@@ -51,6 +51,7 @@ namespace HDTVocabulary {
 	// Dictionary Types
 	const std::string DICTIONARY_TYPE_PLAIN = HDT_DICTIONARY_BASE+"Plain>";
 	const std::string DICTIONARY_TYPE_PFC = HDT_DICTIONARY_BASE+"FrontCoding>";
+	const std::string DICTIONARY_TYPE_PFCPLUS = HDT_DICTIONARY_BASE+"FrontCodingPlus>";
 	const std::string DICTIONARY_TYPE_HTFC = HDT_DICTIONARY_BASE+"FrontCodingHuTucker>";
 
 	// Triples

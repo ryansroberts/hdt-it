@@ -4,11 +4,12 @@ LIBCDSPATH = ../libcds-v1.0.7
 
 CPP=g++
 CPPFLAGS=
-FLAGS=-O3 -Wno-deprecated 
+FLAGS=-O0 -g3 -Wno-deprecated 
 INCLUDES=-I $(LIBCDSPATH)/includes/ -I /usr/local/include -I ./include -I /opt/local/include -I /usr/include
 LDFLAGS=
 DOXYGEN=doxygen
 DEFINES=-DUSE_FOQ
+#DEFINES=-DUSE_RAPTOR
 #DEFINES= -DUSE_FOQ #-DOLD_BITMAP
 LIB=$(LIBCDSPATH)/lib/libcds.a -L/usr/local/lib -L/opt/local/lib -lstdc++ -lraptor2
 
@@ -18,7 +19,7 @@ CPP=g++-4.2
 FLAGS=-arch i386 -arch x86_64 -g -Wno-deprecated
 endif
 
-SRCS=$(wildcard src/*.cpp) $(wildcard src/**/*.cpp)
+SRCS=$(wildcard src/*.cpp) $(wildcard src/**/*.cpp) $(wildcard src/**/**/*.cpp)
 OBJECTS=$(patsubst %.cpp,%.o, $(SRCS) )
 HEADERS=$(wildcard include/*.hpp) $(wildcard include/*.h) $(wildcard src/*.hpp) $(wildcard src/*.h) $(wildcard src/**/*.hpp)
 TOOLS=$(patsubst %.cpp,%, $(wildcard tools/*.cpp))

@@ -135,6 +135,7 @@ CSD_PFC::CSD_PFC(IteratorUCharString *it, uint32_t blocksize, hdt::ProgressListe
 	blocks = new Array(xblocks, bits(bytes));
 }
 
+
 CSD_PFC::~CSD_PFC()
 {
         if(text)

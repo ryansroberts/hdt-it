@@ -161,6 +161,7 @@ public:
 	void dumpSizes(std::ostream &out);
 
 	friend class PFCDictionary;
+	friend class PFCPlusDictionary;
 };
 
 }

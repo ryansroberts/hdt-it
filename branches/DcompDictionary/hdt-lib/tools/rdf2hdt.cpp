@@ -166,6 +166,8 @@ int main(int argc, char **argv) {
 		StopWatch globalTimer;
 		hdt->loadFromRDF(inputFile.c_str(), baseUri, notation, &progress);
 
+
+
 		ofstream out;
 
 		// Save HDT
@@ -227,6 +229,7 @@ int main(int argc, char **argv) {
 	} catch (const char *exception) {
 		cerr << "ERROR: " << exception << endl;
 	}
+
 
 	delete hdt;
 }

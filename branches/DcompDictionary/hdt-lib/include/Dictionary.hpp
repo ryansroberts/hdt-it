@@ -45,7 +45,7 @@
 namespace hdt {
 
 /**
- * Intreface representing the Dictionary part of the HDT representation.
+ * Interface representing the Dictionary part of the HDT representation.
  * Provides a means to convert Strings to ID and the other way around.
  */
 class Dictionary

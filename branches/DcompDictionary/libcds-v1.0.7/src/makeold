@@ -1,9 +1,7 @@
 
 CPP=g++
 #CPP=clang++
-# uncomment and replace CPPFLAGS for mac 
-#CPPFLAGS=-O3 -arch i386 -arch x86_64 
-CPPFLAGS=-O3
+CPPFLAGS=-O3 -arch i386 -arch x86_64 
 
 INCL=-I../includes/
 
