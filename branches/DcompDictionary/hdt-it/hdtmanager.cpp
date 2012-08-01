@@ -31,6 +31,7 @@ HDTManager::HDTManager(QObject *parent) :
     searchResultsModel = new SearchResultsModel(this);
     headerModel = new HeaderModel(this);
     predicateStatus = new PredicateStatus(this);
+    regexModel = new RegexModel(this);
 }
 
 HDTManager::~HDTManager() {
@@ -41,6 +42,7 @@ HDTManager::~HDTManager() {
     delete searchResultsModel;
     delete headerModel;
     delete predicateStatus;
+    delete regexModel;
 }
 
 void HDTManager::updateOnHDTChanged()
@@ -53,6 +55,7 @@ void HDTManager::updateOnHDTChanged()
     objectModel->notifyLayoutChanged();
     searchResultsModel->updateResultListChanged();
     headerModel->updateDatasetChanged();
+    regexModel->updateDatasetChanged();
 
     emit datasetChanged();
 }
@@ -196,6 +199,7 @@ void HDTManager::closeHDT()
         objectModel->notifyLayoutChanged();
         searchResultsModel->updateResultListChanged();
         headerModel->updateDatasetChanged();
+        regexModel->updateDatasetChanged();
 
         emit datasetChanged();
     }
@@ -224,6 +228,11 @@ SearchResultsModel * HDTManager::getSearchResultsModel()
 HeaderModel * HDTManager::getHeaderModel()
 {
     return headerModel;
+}
+
+RegexModel *HDTManager::getRegexModel()
+{
+    return regexModel;
 }
 
 PredicateStatus *HDTManager::getPredicateStatus()

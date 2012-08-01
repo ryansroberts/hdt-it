@@ -28,6 +28,7 @@ HDTit::HDTit(QWidget *parent) :
     ui->objectView->setModel(hdtManager->getObjectModel());
     ui->resultsTable->setModel(hdtManager->getSearchResultsModel());
     ui->headerView->setModel(hdtManager->getHeaderModel());
+    ui->regexResultsView->setModel(hdtManager->getRegexModel());
 
     ui->subjectPatternEdit->getSuggestions()->setManager(hdtManager);
     ui->predicatePatternEdit->getSuggestions()->setManager(hdtManager);
@@ -362,4 +363,14 @@ void HDTit::on_actionSparql_triggered()
     SparqlForm *jf = new SparqlForm(this);
 
     jf->show();
+}
+
+void HDTit::on_regexEdit_editingFinished()
+{
+    hdtManager->getRegexModel()->setQuery(ui->regexEdit->text());
+}
+
+void HDTit::on_regexSearchButton_clicked()
+{
+    hdtManager->getRegexModel()->setQuery(ui->regexEdit->text());
 }

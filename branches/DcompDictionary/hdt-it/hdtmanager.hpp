@@ -9,11 +9,13 @@
 #include "searchresultsmodel.hpp"
 #include "headermodel.hpp"
 #include "predicatestatus.hpp"
+#include "regexmodel.hpp"
 
 class TripleComponentModel;
 class SearchResultsModel;
 class PredicateStatus;
 class HeaderModel;
+class RegexModel;
 
 class HDTManager : public QObject
 {
@@ -34,6 +36,8 @@ private:
     TripleComponentModel *objectModel;
     SearchResultsModel *searchResultsModel;
     HeaderModel *headerModel;
+    RegexModel *regexModel;
+
     PredicateStatus *predicateStatus;
     HDTCachedInfo *hdtCachedInfo;
 
@@ -60,8 +64,10 @@ public:
     TripleComponentModel *getObjectModel();
     SearchResultsModel *getSearchResultsModel();
     HeaderModel *getHeaderModel();
+    RegexModel *getRegexModel();
     PredicateStatus *getPredicateStatus();
     HDTCachedInfo *getHDTCachedInfo();
+
 
     void selectNearestTriple(int subject, int predicate, int object);
     void setSelectedTriple(hdt::TripleID &selected);

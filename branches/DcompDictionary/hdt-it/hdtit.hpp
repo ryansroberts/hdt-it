@@ -67,6 +67,8 @@ private slots:
     void updateNumResults();
     void on_actionFull_Screen_triggered();
     void on_actionSparql_triggered();
+    void on_regexEdit_editingFinished();
+    void on_regexSearchButton_clicked();
 };
 
 #endif // HDTIT_HPP

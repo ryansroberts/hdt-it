@@ -44,7 +44,8 @@ SOURCES += main.cpp\
     dictionarysuggestions.cpp \
     myapplication.cpp \
     sparqlmodel.cpp \
-    sparqlform.cpp
+    sparqlform.cpp \
+    regexmodel.cpp
 
 HEADERS  += hdtit.hpp \
     matrixviewwidget.hpp \
@@ -69,7 +70,8 @@ HEADERS  += hdtit.hpp \
     dictionarysuggestions.hpp \
     myapplication.hpp \
     sparqlmodel.hpp \
-    sparqlform.hpp
+    sparqlform.hpp \
+    regexmodel.hpp
 
 FORMS    += hdtit.ui \
     hdtspecform.ui \
@@ -78,7 +80,7 @@ FORMS    += hdtit.ui \
 
 TRANSLATIONS += hdt-it_es.ts
 
-INCLUDEPATH += ../hdt-lib/include/ .
+INCLUDEPATH += ../hdt-lib/include/ . ../libcds-v1.0.7/includes
 
 # Using Traditional Makefile
 #LIBS += ../libcds-v1.0.7/lib/libcds.a ../hdt-lib/libhdt.a

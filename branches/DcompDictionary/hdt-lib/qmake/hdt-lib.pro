@@ -73,7 +73,11 @@ SOURCES += \
     ../src/sparql/IndexJoinBinding.cpp \
     ../src/sparql/CachedBinding.cpp \
     ../src/sparql/BaseJoinBinding.cpp \
-    ../src/sparql/SortBinding.cpp
+    ../src/sparql/SortBinding.cpp \
+    ../src/dictionary/PFCPlusDictionary.cpp \
+    ../src/libdcs/CSD_FMIndex.cpp \
+    ../src/libdcs/fmindex/SuffixArray.cpp \
+    ../src/libdcs/fmindex/SSA.cpp
 
 HEADERS += \
     ../include/Triples.hpp \
@@ -137,7 +141,11 @@ HEADERS += \
     ../src/sparql/CachedBinding.hpp \
     ../src/sparql/BaseJoinBinding.hpp \
     ../src/sparql/VarFilterBinding.hpp \
-    ../src/sparql/SortBinding.hpp
+    ../src/sparql/SortBinding.hpp \
+    ../src/dictionary/PFCPlusDictionary.hpp \
+    ../src/libdcs/CSD_FMIndex.h \
+    ../src/libdcs/fmindex/SuffixArray.h \
+    ../src/libdcs/fmindex/SSA.h
 
 #For hdt-lib
 INCLUDEPATH += ../include
