@@ -78,7 +78,7 @@ namespace csd{
 			
 			/** Constructor receiving Tdict as a sequence of 'tlength' uchars. Tdict
 			 * @param it: Iterator uchar
-			 * @param stopword: in which prefix stop the iteration
+			 * @param stopword: make until the prefix differs from stopword
 			 * @sparse_bitsequence: tell which rank/select implementation will be use into the FMIndex
 			 *                       false->BitSequeceRG and true->BitSequenceRRR
 			 * @bparam:  If sparce_bitsequence==false  bparam can be (2,3,4,20,40). Otherwise it is the sample rate of BitSequenceRRR

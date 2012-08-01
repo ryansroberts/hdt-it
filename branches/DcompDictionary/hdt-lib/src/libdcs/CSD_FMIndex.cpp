@@ -152,24 +152,12 @@ CSD_FMIndex::CSD_FMIndex(IteratorUCharString *it, uchar *stopword,
 	uchar *text;
 	uint *bitmap = 0;
 
-	//this->tlength = tlength;
-	//size_t len = tlength;
-	//text = new char[len + 2];
-
 	size_t len = 0;
 	size_t reservedSize = 1024;
 	text = (uchar*) malloc(reservedSize * sizeof(uchar));
 	std:vector < uint > samplingsPositions;
 
-	/*	if (use_sample) {
-	 bitmap = new uint[(len + 1 + W) / W];
-	 for (uint i = 0; i < (len + 1 + W) / W; i++)
-	 bitmap[i] = 0;
-	 bitset(bitmap, 0);
-	 }
-	 */
 	text[0] = '\1'; //We suppose that \1 is not part of the text
-//	text[len + 1] = '\0'; //end of the text
 	maxlength = 0;
 	length = 0;
 	uint m_l = 0;
@@ -184,7 +172,7 @@ CSD_FMIndex::CSD_FMIndex(IteratorUCharString *it, uchar *stopword,
 		currentStr = it->next();
 //		cout<<"testing: curentStr:"<<currentStr<<endl;
 //		cout<<"testing: stopword[0]:"<<stopword[0]<<endl;
-		if (currentStr[0] == stopword[0])
+		if (currentStr[0] != stopword[0])
 		//FIXME only compares the first string with is enough now for '"' prefix
 				{
 			stop = true;
@@ -194,7 +182,7 @@ CSD_FMIndex::CSD_FMIndex(IteratorUCharString *it, uchar *stopword,
 	while (!stop) {
 		length++; //new element
 
-//		cout<<"testing:current string:"<<currentStr<<endl;
+	//	cout<<"testing:current string:"<<currentStr<<endl;
 
 		currentLength = strlen((char*) currentStr);
 
@@ -222,15 +210,10 @@ CSD_FMIndex::CSD_FMIndex(IteratorUCharString *it, uchar *stopword,
 			samplingsPositions.push_back(total);
 		total++;
 
-	//	if (use_sample)
-	//		bitset(bitmap, total);
-	//	length++;
-
-
 		stop = false;
 		if (it->hasNext()) {
 			currentStr = it->next();
-			if (currentStr[0] == stopword[0])
+			if (currentStr[0] != stopword[0])
 			//FIXME only compares the first string with is enough now for '"' prefix
 					{
 				stop = true;

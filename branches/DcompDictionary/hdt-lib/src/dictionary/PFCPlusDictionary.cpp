@@ -92,7 +92,7 @@ PFCPlusDictionary::PFCPlusDictionary(HDTSpecification & spec) :
 	}
 
 	stopwordLiterals = (uchar*) malloc(1 * sizeof(uchar));
-	stopwordLiterals[0] = '<'; //dgdfsgadfasdfs
+	stopwordLiterals[0] = '"'; //dgdfsgadfasdfs
 }
 
 PFCPlusDictionary::~PFCPlusDictionary() {
