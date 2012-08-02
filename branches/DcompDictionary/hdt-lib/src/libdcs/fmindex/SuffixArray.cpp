@@ -50,6 +50,7 @@ namespace csd{
 		 if (! p || ! x) 
 			 fprintf(stderr, "malloc failed\n");
 
+
 #if COMPACT==1
 		 l=UCHAR_MAX;
 		 k=1;
@@ -332,7 +333,9 @@ namespace csd{
 				j=transform(V, I, n, k, l, n);
 				bucketsort(V, I, n, j);   /* bucketsort on first r positions.*/
 		 } else {
-				transform(V, I, n, k, l, LONG_MAX);
+				//transform(V, I, n, k, l, LONG_MAX);
+			 	transform(V, I, n, k, l, 2147483647L);
+
 				for (i=0; i<=n; ++i)
 					 I[i]=i;                /* initialize I with suffix numbers.*/
 				h=0;

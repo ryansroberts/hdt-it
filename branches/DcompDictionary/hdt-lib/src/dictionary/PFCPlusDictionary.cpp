@@ -322,12 +322,13 @@ void PFCPlusDictionary::load(std::istream & input, ControlInformation & ci,
 	//uncomment to test locate substring
 /*
 	uint32_t *occs = 0;
-	uchar *subs = (unsigned char*) "alB";
+	uchar *subs = (unsigned char*) "lit";
 	//uint32_t numresults = ((csd::CSD_FMIndex *) objectsLiterals)->locate_substring(subs,10,&occs);
 	uint32_t numresults = this->substringToId(subs,3,&occs);
 	cout<<endl<<endl<<"testing: numresults:"<<numresults<<endl<<endl;
 	for (int i=0;i<numresults;i++){
-		cout<<endl<<endl<<"testing: result id:"<<occs[i]<<"; string:"<<this->idToString(occs[i]+shared->getLength(),OBJECT)<<endl<<endl;
+		//cout<<endl<<endl<<"testing: result id:"<<occs[i]<<"; string:"<<this->idToString(occs[i]+shared->getLength(),OBJECT)<<endl<<endl;
+		cout<<endl<<endl<<"testing: result id:"<<occs[i]<<"; string:"<<this->idToString(occs[i],OBJECT)<<endl<<endl;
 	}
 */
 
@@ -348,7 +349,12 @@ void PFCPlusDictionary::load(std::istream & input, ControlInformation & ci,
  * */
 uint32_t PFCPlusDictionary::substringToId(uchar *s, uint32_t len, uint32_t **occs){
 
-	return ((csd::CSD_FMIndex *) objectsLiterals)->locate_substring(s,len,occs);
+	uint32_t ret=0;
+	ret = ((csd::CSD_FMIndex *) objectsLiterals)->locate_substring(s,len,occs);
+	for (int i=0;i<ret;i++){
+		(*occs)[i] = (*occs)[i]+shared->getLength();
+	}
+	return ret;
 
 }
 

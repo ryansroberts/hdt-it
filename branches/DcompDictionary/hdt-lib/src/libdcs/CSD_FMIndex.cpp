@@ -151,6 +151,7 @@ CSD_FMIndex::CSD_FMIndex(IteratorUCharString *it, uchar *stopword,
 	string element;
 	uchar *text;
 	uint *bitmap = 0;
+	//uint32_t *bitmap = 0;
 
 	size_t len = 0;
 	size_t reservedSize = 1024;
@@ -248,7 +249,6 @@ CSD_FMIndex::CSD_FMIndex(IteratorUCharString *it, uchar *stopword,
 			 bitset(bitmap, samplingsPositions[i]);
 		 }
 	}
-
 //	cout<<"testing:len:"<<len<<endl;
 //	cout<<"testing:textFinal:"<<textFinal<<endl;
 
