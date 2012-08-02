@@ -374,3 +374,11 @@ void HDTit::on_regexSearchButton_clicked()
 {
     hdtManager->getRegexModel()->setQuery(ui->regexEdit->text());
 }
+
+void HDTit::on_regexResultsView_doubleClicked(const QModelIndex &index)
+{
+    if(index.column()==1) {
+        ui->objectPatternEdit->setText(hdtManager->getRegexModel()->data(index).toString());
+        ui->resultTabs->setCurrentIndex(1);
+    }
+}

@@ -108,6 +108,10 @@ void HDTSpecForm::fillHDTSpecification(hdt::HDTSpecification &hdt)
         // PlainDictionary
         hdt.set("dictionary.type", hdt::HDTVocabulary::DICTIONARY_TYPE_PLAIN);
         break;
+    case 2:
+        // PlainDictionary
+        hdt.set("dictionary.type", hdt::HDTVocabulary::DICTIONARY_TYPE_PFCPLUS);
+        break;
     }
 
     switch(ui->triplesTypeCombo->currentIndex()) {

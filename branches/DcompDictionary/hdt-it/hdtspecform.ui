@@ -139,6 +139,11 @@
             <string>Plain</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>FMIndex</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>
