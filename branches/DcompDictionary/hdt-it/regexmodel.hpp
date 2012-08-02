@@ -14,7 +14,7 @@ class RegexModel : public QAbstractTableModel
 private:
     HDTManager *hdtManager;
     uint32_t numResults;
-    ulong *results;
+    uint32_t *results;
 
 public:
     explicit RegexModel(HDTManager *manager);

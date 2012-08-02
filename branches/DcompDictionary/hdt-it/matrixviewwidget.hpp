@@ -4,7 +4,7 @@
 #include <QtGui>
 #include <QtOpenGL>
 #include <QGLWidget>
-#include <glu.h>
+#include <GL/glu.h>
 
 #include <HDT.hpp>
 #include <HDTFactory.hpp>
