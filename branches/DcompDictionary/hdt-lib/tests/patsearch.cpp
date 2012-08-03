@@ -76,8 +76,6 @@ int main(int argc, char **argv) {
 	try {
 		hdt->loadFromHDT(inputFile.c_str());
 
-		hdt->generateIndex();
-
 		char line[1024*10];
 
 		signal(SIGINT, &signalHandler);
