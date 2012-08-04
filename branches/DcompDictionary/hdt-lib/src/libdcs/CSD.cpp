@@ -33,6 +33,8 @@
 
 #include "CSD.h"
 
+#include "CSD_Cache.h"
+
 namespace csd
 {
 
@@ -49,7 +51,8 @@ CSD * CSD::load(ifstream & fp)
 	switch(r)
 	{
 	case HTFC: return CSD_HTFC::load(fp);
-	case PFC: return CSD_PFC::load(fp);
+	//case PFC: return CSD_PFC::load(fp);
+	case PFC: return new CSD_Cache(CSD_PFC::load(fp));
 	//	case REPAIRDAC: return CSD_RePairDAC::load(fp);
 	case FMINDEX: return CSD_FMIndex::load(fp);
 	//	case HASHHUFF: return CSD_HashHuff::load(fp);
