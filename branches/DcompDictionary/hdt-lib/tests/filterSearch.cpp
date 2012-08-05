@@ -110,6 +110,10 @@ int main(int argc, char **argv) {
 
 			StopWatch st_total;
 
+			size_t totalQueryResults = 0;
+
+			size_t numQuery=0;
+
 			while (!file.eof()) {
 				getline(file, linea);
 				if(linea.length()==0) 
@@ -120,7 +124,8 @@ int main(int argc, char **argv) {
 					property = linea.substr(0, pos);
 					value = linea.substr(pos + 1);
 
-					cerr<<"linea:"<<linea<<endl;
+					cerr<<"Query "<<numQuery << ": "<<linea<<endl;
+					cout<<">>> Query "<<numQuery << ": "<<linea<<endl;
 					//cout<<"property:"<<property<<endl;
 					//cout<<"value:"<<value<<endl<<endl;
 
@@ -151,6 +156,7 @@ int main(int argc, char **argv) {
 							if (filter1 != "") {
 								// QUERY Q3
 								cout << dict.idToString(ts->getSubject(), SUBJECT) << " " << objStr << endl;
+								totalQueryResults++;
 
 							} else {
 								// QUERY Q4
@@ -169,13 +175,17 @@ int main(int argc, char **argv) {
 									} else {
 										cout << dict.idToString(inner->getObject(), OBJECT) << endl;
 									}
+									totalQueryResults++;
 								}
 								delete it2;
 							}
 						}
 						delete it;
 					}
-
+					
+					cout << ">>> Results: " << totalQueryResults << endl;
+					cerr << "Query " << numQuery << " Results: " << totalQueryResults << " in " << st << endl << endl;
+					numQuery++;
 				}
 			}
 			cerr << "Total time: " << st_total << endl;
