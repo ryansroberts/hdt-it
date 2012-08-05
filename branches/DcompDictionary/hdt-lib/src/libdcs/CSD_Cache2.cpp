@@ -1,4 +1,4 @@
-/* CSD_Cache.h
+/* CSD_Cache2.h
  * Copyright (C) 2011, Rodrigo Canovas & Miguel A. Martinez-Prieto
  * all rights reserved.
  *
@@ -28,72 +28,60 @@
 #include <stdlib.h>
 
 #include <string.h>
-#include "CSD_Cache.h"
+#include "CSD_Cache2.h"
 
 namespace csd
 {
-CSD_Cache::CSD_Cache(CSD *child) : child(child), cacheint(65536), cachestr(1024)
+CSD_Cache2::CSD_Cache2(CSD *child) : child(child)
 {
 	assert(child);
 	length = child->getLength();
+
+	array.resize(child->getLength(), NULL);
 }
 
 
-CSD_Cache::~CSD_Cache()
+CSD_Cache2::~CSD_Cache2()
 {
 	delete child;
 }
 
-uint32_t CSD_Cache::locate(const uchar *s, uint32_t len)
+uint32_t CSD_Cache2::locate(const uchar *s, uint32_t len)
 {
-	// FIXME: Not working.
-#if 0
-	LRU_Str::const_iterator it = cachestr.find((char *)s);
-
-	if (it != cachestr.end()) {
-		// Key found: retrieve its associated value
-		cout << "1retrieving: " << it.key() << " -> " << it.value() << endl;
-		return it.value();
-	} else {
-		// Key not found: compute and insert the value
-		cout << "1not found" << s << endl;
-		uint32_t value = child->locate(s, len);
-		cachestr[(char *)s] = value;
-		return value;
-	}
-#endif
+	// FIXME: Not implemented
 	return child->locate(s, len);
 }
 
 
-uchar* CSD_Cache::extract(uint32_t id)
+uchar* CSD_Cache2::extract(uint32_t id)
 {
-	LRU_Int::const_iterator it = cacheint.find(id);
-
-	if (it != cacheint.end()) {
-		// Key found: retrieve its associated value
-		//cout << "2retrieving: " << it.key() << " -> " << it.value() << endl;
-		return it.value();
-	} else {
-		// Key not found: compute and insert the value
-		//cout << "2not found: " << id << endl;
-		uchar *value = child->extract(id);
-		cacheint[id] = value;
-		return value;
+	if(id<1 || id>array.size()) {
+		return NULL;
 	}
+
+	if(array[id-1]!=NULL) {
+		return array[id-1];
+	}
+
+	// Not found, fetch and add
+	uchar *value = child->extract(id);
+
+	array[id-1] = value;
+
+	return value;
 }
 
-uint64_t CSD_Cache::getSize()
+uint64_t CSD_Cache2::getSize()
 {
 	return child->getSize();
 }
 
-void CSD_Cache::save(ofstream & fp)
+void CSD_Cache2::save(ofstream & fp)
 {
 	child->save(fp);
 }
 
-CSD* CSD_Cache::load(ifstream & fp)
+CSD* CSD_Cache2::load(ifstream & fp)
 {
 	throw "Not imlemented";
 }

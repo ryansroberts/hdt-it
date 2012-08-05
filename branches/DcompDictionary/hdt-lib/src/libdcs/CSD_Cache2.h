@@ -26,13 +26,8 @@
  */
 
 
-#ifndef _CSDCACHE_H
-#define _CSDCACHE_H
-
-#ifdef size_t
-#undef size_t
-#endif
-#include "../util/lru.hpp"
+#ifndef _CSDCACHE2_H
+#define _CSDCACHE2_H
 
 #include <iostream>
 #include <fstream>
@@ -48,27 +43,23 @@ using namespace std;
 #include <libcdsBasics.h>
 using namespace cds_utils;
 
-typedef plb::LRUCacheH4<uint32_t, uchar *> LRU_Int;
-typedef plb::LRUCacheH4<char *, uint32_t> LRU_Str;
-
 #include "CSD.h"
 
 namespace csd
 {
 
-class CSD_Cache : public CSD
+class CSD_Cache2 : public CSD
 {
 private:
 	CSD *child;
-	LRU_Int cacheint;
-	LRU_Str cachestr;
+	vector<uchar *> array;
 
   public:		
     /** General constructor **/
-	CSD_Cache(CSD *child);
+	CSD_Cache2(CSD *child);
 
     /** General destructor. */
-    ~CSD_Cache();
+    ~CSD_Cache2();
     
     /** Returns the ID that identify s[1..length]. If it does not exist,
 	returns 0.
