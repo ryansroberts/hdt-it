@@ -63,7 +63,6 @@ private:
 	LRU_Int cacheint;
 	LRU_Str cachestr;
 
-
   public:		
     /** General constructor **/
 	CSD_Cache(CSD *child);
@@ -108,6 +107,10 @@ private:
 
     void dumpAll() {
     	child->dumpAll();
+    }
+
+    CSD *getChild() {
+    	return child;
     }
   };
 };

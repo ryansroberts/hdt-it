@@ -32,6 +32,7 @@
 #include <HDTVocabulary.hpp>
 #include "../libdcs/CSD_PFC.h"
 #include "../libdcs/CSD_HTFC.h"
+#include "../libdcs/CSD_Cache.h"
 
 namespace hdt {
 
@@ -349,8 +350,8 @@ void PFCPlusDictionary::load(std::istream & input, ControlInformation & ci,
  * */
 uint32_t PFCPlusDictionary::substringToId(uchar *s, uint32_t len, uint32_t **occs){
 
-	uint32_t ret=0;
-	ret = ((csd::CSD_FMIndex *) objectsLiterals)->locate_substring(s,len,occs);
+	csd::CSD_FMIndex *fmIndex = (csd::CSD_FMIndex  *) ((csd::CSD_Cache *) objectsLiterals)->getChild();
+	uint32_t ret = fmIndex->locate_substring(s,len,occs);
 	for (int i=0;i<ret;i++){
 		(*occs)[i] = (*occs)[i]+shared->getLength();
 	}

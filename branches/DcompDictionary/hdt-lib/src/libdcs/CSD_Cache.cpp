@@ -32,7 +32,7 @@
 
 namespace csd
 {
-CSD_Cache::CSD_Cache(CSD *child) : child(child), cacheint(1024), cachestr(1024)
+CSD_Cache::CSD_Cache(CSD *child) : child(child), cacheint(65536), cachestr(1024)
 {
 	assert(child);
 	length = child->getLength();

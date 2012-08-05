@@ -50,11 +50,11 @@ CSD * CSD::load(ifstream & fp)
 	//fp.seekg(-sizeof(uint32_t), ios_base::cur);
 	switch(r)
 	{
-	case HTFC: return CSD_HTFC::load(fp);
+	case HTFC: return new CSD_Cache(CSD_HTFC::load(fp));
 	//case PFC: return CSD_PFC::load(fp);
 	case PFC: return new CSD_Cache(CSD_PFC::load(fp));
 	//	case REPAIRDAC: return CSD_RePairDAC::load(fp);
-	case FMINDEX: return CSD_FMIndex::load(fp);
+	case FMINDEX: return new CSD_Cache(CSD_FMIndex::load(fp));
 	//	case HASHHUFF: return CSD_HashHuff::load(fp);
 	/*
 	 * case DELTA: return URICDDelta::load(fp);
