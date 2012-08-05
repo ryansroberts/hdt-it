@@ -72,7 +72,7 @@ PFCDictionary::PFCDictionary() : blocksize(8)
 	shared = new csd::CSD_PFC();
 }
 
-PFCDictionary::PFCDictionary(HDTSpecification & spec) : blocksize(32)
+PFCDictionary::PFCDictionary(HDTSpecification & spec) : blocksize(8)
 {
 	subjects = new csd::CSD_PFC();
 	predicates = new csd::CSD_PFC();

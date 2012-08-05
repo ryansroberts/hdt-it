@@ -80,7 +80,7 @@ PFCPlusDictionary::PFCPlusDictionary() :
 }
 
 PFCPlusDictionary::PFCPlusDictionary(HDTSpecification & spec) :
-		blocksize(32) {
+		blocksize(8) {
 	subjects = new csd::CSD_PFC();
 	predicates = new csd::CSD_PFC();
 	objectsNotLiterals = new csd::CSD_PFC();
