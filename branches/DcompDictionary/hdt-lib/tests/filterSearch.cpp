@@ -112,13 +112,15 @@ int main(int argc, char **argv) {
 
 			while (!file.eof()) {
 				getline(file, linea);
+				if(linea.length()==0) 
+					continue;
 				size_t pos = linea.find(';');
 
 				if (pos != std::string::npos) {
 					property = linea.substr(0, pos);
 					value = linea.substr(pos + 1);
 
-					//cout<<"linea:"<<linea<<endl;
+					cerr<<"linea:"<<linea<<endl;
 					//cout<<"property:"<<property<<endl;
 					//cout<<"value:"<<value<<endl<<endl;
 

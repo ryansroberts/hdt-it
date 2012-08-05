@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
 
 		hdt->generateIndex();
 
-		hdt->saveToHDT(inputFile.c_str());
+		hdt->saveToHDT(outputFile.c_str());
 
 		delete hdt;
 	} catch (char *e) {
