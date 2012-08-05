@@ -255,7 +255,8 @@ CSD_FMIndex::CSD_FMIndex(IteratorUCharString *it, uchar *stopword,
 	build_ssa((uchar *) textFinal, len, sparse_bitsequence, bparam, use_sample,
 			bwt_sample);
 	if (use_sample) {
-		separators = new BitSequenceRRR(bitmap, len);
+		//separators = new BitSequenceRRR(bitmap, len);
+		separators = new BitSequenceRG(bitmap, len, 4);
 		delete[] bitmap;
 	}
 	delete[] text;

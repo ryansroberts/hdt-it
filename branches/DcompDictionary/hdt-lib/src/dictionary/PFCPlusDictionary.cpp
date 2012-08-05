@@ -114,7 +114,7 @@ csd::CSD *loadSectionPFC(DictIterator *iterator, uint32_t blocksize,
  * use_sample = true ; enables to locate substrings.
  */
 csd::CSD *loadSectionFMIndex(DictIterator *iterator, uchar *stopword,
-		bool sparse_bitsequence = false, int bparam = 40,
+		bool sparse_bitsequence = false, int bparam = 4,
 		size_t bwt_sample = 64, bool use_sample = true,
 		hdt::ProgressListener *listener = NULL) {
 	return new csd::CSD_FMIndex(iterator, stopword, sparse_bitsequence, bparam,
