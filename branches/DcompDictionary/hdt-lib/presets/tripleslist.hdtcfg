@@ -1,4 +1,0 @@
-header.type = <http://purl.org/HDT/hdt#headerSimple>
-triples.type = <http://purl.org/HDT/hdt#triplesList>
-dictionary.type = <http://purl.org/HDT/hdt#dictionaryPlain>
-triples.component.order = SPO
