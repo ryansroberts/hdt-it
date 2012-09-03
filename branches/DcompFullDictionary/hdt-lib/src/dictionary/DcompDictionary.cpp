@@ -1,8 +1,8 @@
 /*
- * File: LiteralDictionary.hpp
+ * File: DcompDictionary.cpp
  * Last modified: $Date: 2011-08-21 05:35:30 +0100 (dom, 21 ago 2011) $
  * Revision: $Revision: 180 $
- * Last modified by: $Author: mario.arias $
+ * Last modified by: $Author: javier.fernandez $
  *
  * Copyright (C) 2012, Mario Arias, Javier D. Fernandez, Miguel A. Martinez-Prieto
  * All rights reserved.
@@ -29,28 +29,29 @@
  *
  */
 
-#include "LiteralDictionary.hpp"
+#include "DcompDictionary.hpp"
 #include <HDTVocabulary.hpp>
 #include "../libdcs/CSD_PFC.h"
 #include "../libdcs/CSD_HTFC.h"
 #include "../libdcs/CSD_FMIndex.h"
 #include "../libdcs/CSD_Cache.h"
 #include "../libdcs/CSD_Cache2.h"
+#include "../libdcs/CSD_ConfigurableURIBlank.h"
 
 namespace hdt {
 
-LiteralDictionary::LiteralDictionary() :
+DcompDictionary::DcompDictionary() :
 		blocksize(8) {
-	subjects = new csd::CSD_PFC();
+	subjects = new csd::CSD_ConfigurableURIBlank();
 	predicates = new csd::CSD_PFC();
 	objectsNotLiterals = new csd::CSD_PFC();
 	objectsLiterals = new csd::CSD_FMIndex();
 	shared = new csd::CSD_PFC();
 }
 
-LiteralDictionary::LiteralDictionary(HDTSpecification & spec) :
+DcompDictionary::DcompDictionary(HDTSpecification & spec) :
 		blocksize(8) {
-	subjects = new csd::CSD_PFC();
+	subjects = new csd::CSD_ConfigurableURIBlank();
 	predicates = new csd::CSD_PFC();
 	objectsNotLiterals = new csd::CSD_PFC();
 	objectsLiterals = new csd::CSD_FMIndex();
@@ -62,7 +63,7 @@ LiteralDictionary::LiteralDictionary(HDTSpecification & spec) :
 	}
 }
 
-LiteralDictionary::~LiteralDictionary() {
+DcompDictionary::~DcompDictionary() {
 	delete subjects;
 	delete predicates;
 	delete objectsNotLiterals;
@@ -70,23 +71,30 @@ LiteralDictionary::~LiteralDictionary() {
 	delete shared;
 }
 
-csd::CSD *loadSectionPFC(IteratorUCharString *iterator, uint32_t blocksize,
+csd::CSD *loadCSDSectionPFC(IteratorUCharString *iterator, uint32_t blocksize,
 		ProgressListener *listener) {
 	return new csd::CSD_PFC(iterator, blocksize, listener);
 	//return new csd::CSD_HTFC(iterator, blocksize, listener);
 }
 
+csd::CSD *loadCSDSectionConfigurableURIBlank(IteratorUCharString *iterator, uint32_t blocksize,
+		ProgressListener *listener) {
+	csd::CSD_PFC * URIsDict = new csd::CSD_PFC(blocksize);
+	csd::CSD_PFC * BlanksDict = new csd::CSD_PFC(blocksize);
+	return new csd::CSD_ConfigurableURIBlank(URIsDict,BlanksDict,iterator,listener);
+}
+
 /*
  * use_sample = true ; enables to locate substrings.
  */
-csd::CSD *loadSectionFMIndex(IteratorUCharString *iterator,
+csd::CSD *loadCSDSectionFMIndex(IteratorUCharString *iterator,
 		bool sparse_bitsequence, int bparam, size_t bwt_sample, bool use_sample,
 		hdt::ProgressListener *listener) {
 	return new csd::CSD_FMIndex(iterator, sparse_bitsequence, bparam,
 			bwt_sample, use_sample, listener);
 }
 
-std::string LiteralDictionary::idToString(unsigned int id,
+std::string DcompDictionary::idToString(unsigned int id,
 		TripleComponentRole position) {
 	csd::CSD *section = getDictionarySection(id, position);
 	unsigned int localid = getLocalId(id, position);
@@ -105,7 +113,7 @@ std::string LiteralDictionary::idToString(unsigned int id,
 	return string();
 }
 
-unsigned int LiteralDictionary::stringToId(std::string &key,
+unsigned int DcompDictionary::stringToId(std::string &key,
 		TripleComponentRole position) {
 	unsigned int ret;
 
@@ -159,7 +167,7 @@ unsigned int LiteralDictionary::stringToId(std::string &key,
 	}
 }
 
-void LiteralDictionary::load(std::istream & input, ControlInformation & ci,
+void DcompDictionary::load(std::istream & input, ControlInformation & ci,
 		ProgressListener *listener) {
 	this->mapping = ci.getUint("$mapping");
 	this->sizeStrings = ci.getUint("$sizeStrings");
@@ -180,7 +188,7 @@ void LiteralDictionary::load(std::istream & input, ControlInformation & ci,
 	delete subjects;
 	subjects = csd::CSD::load(input);
 	if (subjects == NULL) {
-		subjects = new csd::CSD_PFC();
+		subjects = new csd::CSD_ConfigurableURIBlank();
 		throw "Could not read subjects.";
 	}
 	subjects = new csd::CSD_Cache(subjects);
@@ -216,26 +224,26 @@ void LiteralDictionary::load(std::istream & input, ControlInformation & ci,
 	objectsNotLiterals = new csd::CSD_Cache(objectsNotLiterals);
 }
 
-size_t LiteralDictionary::load(unsigned char *ptr, unsigned char *ptrMax,
+size_t DcompDictionary::load(unsigned char *ptr, unsigned char *ptrMax,
 		ProgressListener *listener) {
 	throw "Not implemented";
 }
 
-class LiteralIterator: public IteratorUCharString {
+class DcompIterator: public IteratorUCharString {
 private:
 	IteratorUCharString *child;
 	unsigned char *previous, *nextItem;
 	bool goon;
 
 public:
-	LiteralIterator(IteratorUCharString *child) :
+	DcompIterator(IteratorUCharString *child) :
 			child(child), previous(NULL), nextItem(NULL), goon(false) {
 		if (child->hasNext()) {
 			nextItem = child->next();
 		}
 	}
 
-	virtual ~LiteralIterator() {
+	virtual ~DcompIterator() {
 		// Attention: Does not delete child.
 	}
 
@@ -269,40 +277,41 @@ public:
 	}
 };
 
-void LiteralDictionary::import(Dictionary *other, ProgressListener *listener) {
+void DcompDictionary::import(Dictionary *other, ProgressListener *listener) {
 	try {
 		IntermediateListener iListener(listener);
 
 		//NOTIFY(listener, "DictionaryPFC loading subjects", 0, 100);
 		IteratorUCharString *itSubj = other->getSubjects();
+
+
 		delete subjects;
 		iListener.setRange(0, 20);
-		subjects = loadSectionPFC(itSubj, blocksize, &iListener);
+		subjects = loadCSDSectionConfigurableURIBlank(itSubj, blocksize, &iListener);
 		subjects = new csd::CSD_Cache(subjects);
 		delete itSubj;
-
 		//NOTIFY(listener, "DictionaryPFC loading predicates", 25, 30);
 		IteratorUCharString *itPred = other->getPredicates();
 		delete predicates;
 		iListener.setRange(20, 21);
-		predicates = loadSectionPFC(itPred, blocksize, &iListener);
+		predicates = loadCSDSectionPFC(itPred, blocksize, &iListener);
 		subjects = new csd::CSD_Cache2(subjects);
 		delete itPred;
 
 		//NOTIFY(listener, "DictionaryPFC loading objects", 30, 90);
 		iListener.setRange(21, 50);
 		IteratorUCharString *itObj = other->getObjects();
-		LiteralIterator litIt(itObj);
+		DcompIterator litIt(itObj);
 
 		delete objectsLiterals;
-		objectsLiterals = loadSectionFMIndex(&litIt, false, 4, 64, true,
+		objectsLiterals = loadCSDSectionFMIndex(&litIt, false, 4, 64, true,
 				&iListener);
 		objectsLiterals = new csd::CSD_Cache(objectsLiterals);
 		litIt.doContinue();
 
 		iListener.setRange(50, 90);
 		delete objectsNotLiterals;
-		objectsNotLiterals = loadSectionPFC(&litIt, blocksize, &iListener);
+		objectsNotLiterals = loadCSDSectionPFC(&litIt, blocksize, &iListener);
 		objectsNotLiterals = new csd::CSD_Cache(objectsNotLiterals);
 		delete itObj;
 
@@ -310,7 +319,7 @@ void LiteralDictionary::import(Dictionary *other, ProgressListener *listener) {
 		IteratorUCharString *itShared = other->getShared();
 		delete shared;
 		iListener.setRange(90, 100);
-		shared = loadSectionPFC(itShared, blocksize, &iListener);
+		shared = loadCSDSectionPFC(itShared, blocksize, &iListener);
 		shared = new csd::CSD_Cache(shared);
 		delete itShared;
 
@@ -322,7 +331,7 @@ void LiteralDictionary::import(Dictionary *other, ProgressListener *listener) {
 		delete objectsLiterals;
 		delete objectsNotLiterals;
 		delete shared;
-		subjects = new csd::CSD_PFC();
+		subjects = new csd::CSD_ConfigurableURIBlank();
 		predicates = new csd::CSD_PFC();
 		objectsNotLiterals = new csd::CSD_PFC();
 		objectsLiterals = new csd::CSD_FMIndex();
@@ -331,23 +340,23 @@ void LiteralDictionary::import(Dictionary *other, ProgressListener *listener) {
 	}
 }
 
-IteratorUCharString *LiteralDictionary::getSubjects() {
+IteratorUCharString *DcompDictionary::getSubjects() {
 	throw "Not implemented";
 }
 
-IteratorUCharString *LiteralDictionary::getPredicates() {
+IteratorUCharString *DcompDictionary::getPredicates() {
 	throw "Not implemented";
 }
 
-IteratorUCharString *LiteralDictionary::getObjects() {
+IteratorUCharString *DcompDictionary::getObjects() {
 	throw "Not implemented";
 }
 
-IteratorUCharString *LiteralDictionary::getShared() {
+IteratorUCharString *DcompDictionary::getShared() {
 	throw "Not implemented";
 }
 
-uint32_t LiteralDictionary::substringToId(unsigned char *s, uint32_t len,
+uint32_t DcompDictionary::substringToId(unsigned char *s, uint32_t len,
 		uint32_t **occs) {
 
 	if (len == 0) {
@@ -372,14 +381,14 @@ uint32_t LiteralDictionary::substringToId(unsigned char *s, uint32_t len,
 	}
 
 	cerr
-			<< "Warning, trying to call LiteralDictionary::substringToId() but it was not an FM-Index.";
+			<< "Warning, trying to call DcompDictionary::substringToId() but it was not an FM-Index.";
 	return 0;
 }
 
-void LiteralDictionary::save(std::ostream & output,
+void DcompDictionary::save(std::ostream & output,
 		ControlInformation & controlInformation, ProgressListener *listener) {
 	controlInformation.set("codification",
-			HDTVocabulary::DICTIONARY_TYPE_LITERAL);
+			HDTVocabulary::DICTIONARY_TYPE_DCOMP);
 	controlInformation.set("format", "text/plain");
 	controlInformation.setUint("$elements", getNumberOfElements());
 
@@ -429,9 +438,9 @@ void LiteralDictionary::save(std::ostream & output,
 	//cout << "Dictionary saved " << out->tellp() << endl;
 }
 
-void LiteralDictionary::populateHeader(Header & header, string rootNode) {
+void DcompDictionary::populateHeader(Header & header, string rootNode) {
 	header.insert(rootNode, HDTVocabulary::DICTIONARY_TYPE,
-			HDTVocabulary::DICTIONARY_TYPE_LITERAL);
+			HDTVocabulary::DICTIONARY_TYPE_DCOMP);
 	header.insert(rootNode, HDTVocabulary::DICTIONARY_NUMSUBJECTS,
 			getNsubjects());
 	header.insert(rootNode, HDTVocabulary::DICTIONARY_NUMPREDICATES,
@@ -451,21 +460,21 @@ void LiteralDictionary::populateHeader(Header & header, string rootNode) {
 			this->blocksize);
 }
 
-unsigned int LiteralDictionary::getNsubjects() {
+unsigned int DcompDictionary::getNsubjects() {
 	return shared->getLength() + subjects->getLength();
 }
-unsigned int LiteralDictionary::getNpredicates() {
+unsigned int DcompDictionary::getNpredicates() {
 	return predicates->getLength();
 }
-unsigned int LiteralDictionary::getNobjects() {
+unsigned int DcompDictionary::getNobjects() {
 	return shared->getLength() + objectsNotLiterals->getLength()
 			+ objectsLiterals->getLength();
 }
-unsigned int LiteralDictionary::getNshared() {
+unsigned int DcompDictionary::getNshared() {
 	return shared->getLength();
 }
 
-unsigned int LiteralDictionary::getMaxID() {
+unsigned int DcompDictionary::getMaxID() {
 	unsigned int s = subjects->getLength();
 	unsigned int o = objectsLiterals->getLength()
 			+ objectsNotLiterals->getLength();
@@ -479,15 +488,15 @@ unsigned int LiteralDictionary::getMaxID() {
 	}
 }
 
-unsigned int LiteralDictionary::getMaxSubjectID() {
+unsigned int DcompDictionary::getMaxSubjectID() {
 	return getNsubjects();
 }
 
-unsigned int LiteralDictionary::getMaxPredicateID() {
+unsigned int DcompDictionary::getMaxPredicateID() {
 	return predicates->getLength();
 }
 
-unsigned int LiteralDictionary::getMaxObjectID() {
+unsigned int DcompDictionary::getMaxObjectID() {
 	unsigned int s = subjects->getLength();
 	unsigned int o = objectsLiterals->getLength()
 			+ objectsNotLiterals->getLength();
@@ -500,37 +509,37 @@ unsigned int LiteralDictionary::getMaxObjectID() {
 	}
 }
 
-unsigned int LiteralDictionary::getNumberOfElements() {
+unsigned int DcompDictionary::getNumberOfElements() {
 	return shared->getLength() + subjects->getLength() + predicates->getLength()
 			+ objectsLiterals->getLength() + objectsNotLiterals->getLength();
 }
 
-unsigned int LiteralDictionary::size() {
+unsigned int DcompDictionary::size() {
 	return shared->getSize() + subjects->getSize() + predicates->getSize()
 			+ objectsLiterals->getSize() + objectsNotLiterals->getSize();
 }
 
-void LiteralDictionary::startProcessing(ProgressListener *listener) {
+void DcompDictionary::startProcessing(ProgressListener *listener) {
 }
 
-void LiteralDictionary::stopProcessing(ProgressListener *listener) {
+void DcompDictionary::stopProcessing(ProgressListener *listener) {
 
 }
 
-unsigned int LiteralDictionary::insert(std::string & str,
+unsigned int DcompDictionary::insert(std::string & str,
 		TripleComponentRole position) {
 	throw "This dictionary does not support insertions.";
 }
 
-string LiteralDictionary::getType() {
+string DcompDictionary::getType() {
 	return HDTVocabulary::DICTIONARY_TYPE_LITERAL;
 }
 
-unsigned int LiteralDictionary::getMapping() {
+unsigned int DcompDictionary::getMapping() {
 	return mapping;
 }
 
-csd::CSD *LiteralDictionary::getDictionarySection(unsigned int id,
+csd::CSD *DcompDictionary::getDictionarySection(unsigned int id,
 		TripleComponentRole position) {
 	switch (position) {
 	case SUBJECT:
@@ -569,8 +578,8 @@ csd::CSD *LiteralDictionary::getDictionarySection(unsigned int id,
 	throw "Item not found";
 }
 
-unsigned int LiteralDictionary::getGlobalId(unsigned int mapping,
-		unsigned int id, DictionarySection position) {
+unsigned int DcompDictionary::getGlobalId(unsigned int mapping, unsigned int id,
+		DictionarySection position) {
 	switch (position) {
 	case NOT_SHARED_SUBJECT:
 		return shared->getLength() + id;
@@ -593,13 +602,13 @@ unsigned int LiteralDictionary::getGlobalId(unsigned int mapping,
 	throw "Item not found";
 }
 
-unsigned int LiteralDictionary::getGlobalId(unsigned int id,
+unsigned int DcompDictionary::getGlobalId(unsigned int id,
 		DictionarySection position) {
 	return getGlobalId(this->mapping, id, position);
 }
 
-unsigned int LiteralDictionary::getLocalId(unsigned int mapping,
-		unsigned int id, TripleComponentRole position) {
+unsigned int DcompDictionary::getLocalId(unsigned int mapping, unsigned int id,
+		TripleComponentRole position) {
 	switch (position) {
 	case SUBJECT:
 		if (id <= shared->getLength()) {
@@ -634,12 +643,12 @@ unsigned int LiteralDictionary::getLocalId(unsigned int mapping,
 	throw "Item not found";
 }
 
-unsigned int LiteralDictionary::getLocalId(unsigned int id,
+unsigned int DcompDictionary::getLocalId(unsigned int id,
 		TripleComponentRole position) {
 	return getLocalId(mapping, id, position);
 }
 
-void LiteralDictionary::getSuggestions(const char *base,
+void DcompDictionary::getSuggestions(const char *base,
 		hdt::TripleComponentRole role, std::vector<std::string> &out,
 		int maxResults) {
 	if (role == PREDICATE) {

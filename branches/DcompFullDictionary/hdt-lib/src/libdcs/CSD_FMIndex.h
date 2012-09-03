@@ -51,20 +51,28 @@ namespace csd{
 	class CSD_FMIndex: public CSD{	
 		
 		public:
-			/** General constructor **/
-			CSD_FMIndex();
-
-			/** Constructor receiving Tdict as a sequence of 'tlength' uchars. Tdict
-			 * @param it: Iterator unsigned char
-			 * @param stopword: make until the prefix differs from stopword
+			/** General constructor
 			 * @sparse_bitsequence: tell which rank/select implementation will be use into the FMIndex
 			 *                       false->BitSequeceRG and true->BitSequenceRRR
 			 * @bparam:  If sparce_bitsequence==false  bparam can be (2,3,4,20,40). Otherwise it is the sample rate of BitSequenceRRR
 			 * @bwt_sample: sample range that will used for the bwt
-			 * @use_sample: tell if the suffixes sampling will be stored or not.
+			 * @use_sampling: tell if the suffixes sampling will be stored or not.
+			 **/
+
+			CSD_FMIndex(bool sparse_bitsequence=false, int bparam=40, size_t bwt_sample=64, bool use_sampling=false);
+
+			/** Constructor receiving Tdict as a sequence of 'tlength' uchars. Tdict
+			 * @param it: Iterator unsigned char
+			 * @sparse_bitsequence: tell which rank/select implementation will be use into the FMIndex
+			 *                       false->BitSequeceRG and true->BitSequenceRRR
+			 * @bparam:  If sparce_bitsequence==false  bparam can be (2,3,4,20,40). Otherwise it is the sample rate of BitSequenceRRR
+			 * @bwt_sample: sample range that will used for the bwt
+			 * @use_sampling: tell if the suffixes sampling will be stored or not.
 			 * @param listener
 			 **/
-			CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence=false, int bparam=40, size_t bwt_sample=64, bool use_sample=false, hdt::ProgressListener *listener=NULL);
+			CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence=false, int bparam=40, size_t bwt_sample=64, bool use_sampling=false, hdt::ProgressListener *listener=NULL);
+
+			void CSD_initialize(hdt::IteratorUCharString *it, hdt::ProgressListener *listener=NULL);
 
 			/** Returns the ID that identify s[1..length]. If it does not exist, 
 			 * returns 0. 
@@ -123,9 +131,13 @@ namespace csd{
 			SSA *fm_index;
 			BitSequence *separators;
 			bool use_sampling;
+			bool sparse_bitsequence;
+			int bparam;
+			size_t bwt_sample;
+
 			uint32_t maxlength;
 
-			void build_ssa(unsigned char *text, size_t len, bool sparse_bitsequence, int bparam, bool use_sample, size_t bwt_sample);
+			void build_ssa(unsigned char *text, size_t len);
 			
 			void quicksort(uint32_t *occs, size_t ini, size_t len);
 

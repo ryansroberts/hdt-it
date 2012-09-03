@@ -65,12 +65,14 @@ SOURCES += \
     ../src/dictionary/PFCDictionary.cpp \
     ../src/dictionary/KyotoDictionary.cpp \
     ../src/dictionary/LiteralDictionary.cpp \
+    ../src/dictionary/DcompDictionary.cpp \
     ../src/rdf/RDFParserNtriples.cpp \
     ../src/rdf/RDFParser.cpp \
     ../src/rdf/RDFSerializerRaptor.cpp \
     ../src/rdf/RDFSerializer.cpp \
     ../src/util/fileUtil.cpp \
     ../src/rdf/RDFParserRaptorCallback.cpp \
+    ../src/rdf/RDFParserNtriplesCallback.cpp \
     ../src/sparql/TriplePatternBinding.cpp \
     ../src/sparql/MergeJoinBinding.cpp \
     ../src/sparql/JoinAlgorithms.cpp \
@@ -117,6 +119,7 @@ HEADERS += \
     ../src/dictionary/KyotoDictionary.hpp \
     ../src/dictionary/PFCDictionary.hpp \
     ../src/dictionary/LiteralDictionary.hpp \
+    ../src/dictionary/DcompDictionary.hpp \
     ../src/triples/TriplesList.hpp \
     ../src/triples/TriplesComparator.hpp \
     ../src/triples/TripleOrderConvert.hpp \
