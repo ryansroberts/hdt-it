@@ -44,6 +44,7 @@
 #include "../dictionary/KyotoDictionary.hpp"
 #include "../dictionary/PFCDictionary.hpp"
 #include "../dictionary/LiteralDictionary.hpp"
+#include "../dictionary/DcompDictionary.hpp"
 
 #include "../triples/TriplesList.hpp"
 #include "../triples/TriplesKyoto.hpp"
@@ -103,6 +104,8 @@ void BasicHDT::createComponents() {
 		dictionary = new PlainDictionary(spec);
 	} else if(dictType==HDTVocabulary::DICTIONARY_TYPE_LITERAL) {
 			dictionary = new LiteralDictionary(spec);
+	} else if(dictType==HDTVocabulary::DICTIONARY_TYPE_DCOMP) {
+				dictionary = new DcompDictionary(spec);
 	} else {
 		dictionary = new PFCDictionary(spec);
 	}

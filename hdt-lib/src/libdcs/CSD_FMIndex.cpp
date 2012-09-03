@@ -39,15 +39,32 @@
 
 namespace csd {
 
-CSD_FMIndex::CSD_FMIndex() {
-	fm_index = NULL;
-	separators = NULL;
+CSD_FMIndex::CSD_FMIndex(bool sparse_bitsequence, int bparam, size_t bwt_sample,
+		bool use_sampling) {
+	this->type = FMINDEX;
+	this->fm_index = NULL;
+	this->separators = NULL;
+	this->sparse_bitsequence = sparse_bitsequence;
+	this->bparam = bparam;
+	this->bwt_sample = bwt_sample;
+	this->use_sampling = use_sampling;
 }
 
-CSD_FMIndex::CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence, int bparam, size_t bwt_sample, bool use_sample,
+CSD_FMIndex::CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence,
+		int bparam, size_t bwt_sample, bool use_sampling,
 		hdt::ProgressListener *listener) {
 
 	this->type = FMINDEX;
+	this->sparse_bitsequence = sparse_bitsequence;
+	this->bparam = bparam;
+	this->bwt_sample = bwt_sample;
+	this->use_sampling = use_sampling;
+
+	CSD_initialize(it,listener);
+}
+
+	void CSD_FMIndex::CSD_initialize(hdt::IteratorUCharString *it, hdt::ProgressListener *listener){
+
 	string element;
 	unsigned char *text;
 	uint *bitmap = 0;
@@ -56,7 +73,7 @@ CSD_FMIndex::CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence, 
 	size_t len = 0;
 	size_t reservedSize = 1024;
 	text = (unsigned char*) malloc(reservedSize * sizeof(unsigned char));
-	std:vector < size_t > samplingsPositions;
+	std: vector<size_t> samplingsPositions;
 
 	text[0] = '\1'; //We suppose that \1 is not part of the text
 	maxlength = 0;
@@ -71,7 +88,7 @@ CSD_FMIndex::CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence, 
 	while (it->hasNext()) {
 		currentStr = it->next();
 		//cout << "FMINDEX insert: "<< currentStr << endl;
-		if(currentStr[0]!='"') {
+		if (currentStr[0] != '"') {
 			cerr << "Warning: Saving non-literal in an FM-Index";
 		}
 
@@ -91,15 +108,16 @@ CSD_FMIndex::CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence, 
 					reservedSize = ((size_t) total + currentLength) * 2;
 				}
 			}
-			text = (unsigned char*) realloc(text, reservedSize * sizeof(unsigned char));
+			text = (unsigned char*) realloc(text,
+					reservedSize * sizeof(unsigned char));
 		}
-		strncpy((char*)(text+total), (char*)currentStr, currentLength);
+		strncpy((char*) (text + total), (char*) currentStr, currentLength);
 
-		total +=currentLength;
+		total += currentLength;
 
 		text[total] = '\1';
 
-		if (use_sample) {
+		if (use_sampling) {
 			samplingsPositions.push_back(total);
 		}
 
@@ -109,10 +127,10 @@ CSD_FMIndex::CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence, 
 
 	this->tlength = total;
 	char *textFinal;
-	textFinal = new char[total+ 1];
+	textFinal = new char[total + 1];
 //	cout<<"testing:total cpy:"<<total<<endl;
 //	cout<<"testing:text:"<<text<<endl;
-	strncpy((char*)(textFinal), (char*)text, total);
+	strncpy((char*) (textFinal), (char*) text, total);
 	textFinal[total] = '\0'; //end of the text
 //	cout<<"testing:textFinal:"<<textFinal<<endl;
 
@@ -125,19 +143,19 @@ CSD_FMIndex::CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence, 
 		len--;
 	}
 
-	if (use_sample) {
-		 bitmap = new uint[(total + 1 + W) / W];
-		 memset((void*)bitmap, 0, 4*((total + 1 + W) / W));
-		 bitset(bitmap, 0);
-		 for (size_t i=0;i<samplingsPositions.size();i++){
-			 bitset(bitmap, samplingsPositions[i]);
-		 }
+	if (use_sampling) {
+		bitmap = new uint[(total + 1 + W) / W];
+		memset((void*) bitmap, 0, 4 * ((total + 1 + W) / W));
+		bitset(bitmap, 0);
+		for (size_t i = 0; i < samplingsPositions.size(); i++) {
+			bitset(bitmap, samplingsPositions[i]);
+		}
 	}
 //	cout<<"testing:len:"<<len<<endl;
 //	cout<<"testing:textFinal:"<<textFinal<<endl;
 
-	build_ssa((unsigned char *) textFinal, len, sparse_bitsequence, bparam, use_sample,	bwt_sample);
-	if (use_sample) {
+	build_ssa((unsigned char *) textFinal, len);
+	if (use_sampling) {
 		//separators = new BitSequenceRRR(bitmap, len);
 		separators = new BitSequenceRG(bitmap, len, 4);
 		delete[] bitmap;
@@ -146,14 +164,12 @@ CSD_FMIndex::CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence, 
 
 }
 
-void CSD_FMIndex::build_ssa(unsigned char *text, size_t len, bool sparse_bitsequence,
-		int bparam, bool use_sample, size_t bwt_sample) {
-	use_sampling = use_sample;
-	fm_index = new SSA((unsigned char *) text, len, false, use_sample);
+void CSD_FMIndex::build_ssa(unsigned char *text, size_t len) {
+	fm_index = new SSA((unsigned char *) text, len, false, use_sampling);
 
 	Mapper * am = new MapperNone();
-    am->use();
-    wt_coder * wc = new wt_coder_huff((unsigned char *) text, len, am);
+	am->use();
+	wt_coder * wc = new wt_coder_huff((unsigned char *) text, len, am);
 	BitSequenceBuilder * sbb;
 	if (sparse_bitsequence)
 		sbb = new BitSequenceBuilderRRR(bparam);
@@ -161,13 +177,13 @@ void CSD_FMIndex::build_ssa(unsigned char *text, size_t len, bool sparse_bitsequ
 		sbb = new BitSequenceBuilderRG(bparam);
 	fm_index->set_static_bitsequence_builder(sbb);
 
-    SequenceBuilder * ssb = new SequenceBuilderWaveletTree(sbb, am, wc);
+	SequenceBuilder * ssb = new SequenceBuilderWaveletTree(sbb, am, wc);
 
 	fm_index->set_static_sequence_builder(ssb);
 	fm_index->set_samplesuff(bwt_sample);
-    fm_index->build_index();
+	fm_index->build_index();
 
-    am->unuse();
+	am->unuse();
 }
 
 CSD_FMIndex::~CSD_FMIndex() {
@@ -192,7 +208,8 @@ uint32_t CSD_FMIndex::locate(const unsigned char *s, uint32_t len) {
 	return 0;
 }
 
-uint32_t CSD_FMIndex::locate_substring(unsigned char *s, uint32_t len, uint32_t **occs) {
+uint32_t CSD_FMIndex::locate_substring(unsigned char *s, uint32_t len,
+		uint32_t **occs) {
 	if (!use_sampling) {
 		*occs = NULL;
 		return 0;
@@ -231,7 +248,7 @@ unsigned char * CSD_FMIndex::extract(uint32_t id) {
 }
 
 void CSD_FMIndex::freeString(const unsigned char *str) {
-	delete [] str;
+	delete[] str;
 }
 
 uint CSD_FMIndex::decompress(unsigned char **dict) {
@@ -273,13 +290,12 @@ void CSD_FMIndex::save(ostream &fp) {
 	saveValue<bool>(fp, use_sampling);
 	if (use_sampling)
 		separators->save(fp);
-    fm_index->save(fp);
+	fm_index->save(fp);
 
 }
 
-size_t CSD_FMIndex::load(unsigned char *ptr, unsigned char *ptrMax)
-{
-    throw "Not implemented";
+size_t CSD_FMIndex::load(unsigned char *ptr, unsigned char *ptrMax) {
+	throw "Not implemented";
 }
 
 CSD * CSD_FMIndex::load(istream & fp) {
@@ -339,7 +355,23 @@ void CSD_FMIndex::dumpAll() {
 
 void csd::CSD_FMIndex::fillSuggestions(const char *base,
 		vector<std::string> &out, int maxResults) {
-	//FIXME: To be completed
+	size_t len = strlen(base);
+	unsigned char *n_s = new unsigned char[len + 1];
+	uint o;
+	n_s[0] = '\1';
+	for (uint32_t i = 1; i <= len; i++)
+		n_s[i] = base[i - 1];
+
+	uint32_t *results = NULL;
+
+	size_t numresults = this->locate_substring(n_s, len + 1, &results);
+	int maxIter = maxResults;
+	if (numresults < maxIter)
+		maxIter = numresults;
+	for (int i = 0; i < numresults; i++) {
+		out.push_back((char*) (this->extract(results[i])));
+	}
+
 }
 
 }

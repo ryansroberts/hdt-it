@@ -35,6 +35,7 @@
 #include "CSD_PFC.h"
 #include "CSD_HTFC.h"
 #include "CSD_FMIndex.h"
+#include "CSD_ConfigurableURIBlank.h"
 
 #include <libcdsBasics.h>
 
@@ -55,6 +56,7 @@ CSD * CSD::load(istream & fp)
     case HTFC: return CSD_HTFC::load(fp);
     case PFC: return CSD_PFC::load(fp);
     case FMINDEX: return CSD_FMIndex::load(fp);
+    case CONFURIBLANK: return CSD_ConfigurableURIBlank::load(fp);
     }
     return NULL;
 }
@@ -66,6 +68,7 @@ CSD *CSD::create(uchar type)
     case HTFC: return new CSD_HTFC();
     case PFC: return new CSD_PFC();
     case FMINDEX: return new CSD_FMIndex();
+    case CONFURIBLANK: return new CSD_ConfigurableURIBlank();
     }
 
     return NULL;

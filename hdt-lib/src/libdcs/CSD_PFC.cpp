@@ -34,12 +34,12 @@
 
 namespace csd
 {
-CSD_PFC::CSD_PFC() : isMapped(false)
+CSD_PFC::CSD_PFC(uint32_t blocksize) : isMapped(false)
 {
 	this->type = PFC;
 	this->numstrings = 0;
 	this->bytes = 0;
-	this->blocksize = 0;
+	this->blocksize = blocksize;
 	this->nblocks = 0;
 	this->text = NULL;
 	this->blocks = NULL;
@@ -53,6 +53,10 @@ CSD_PFC::CSD_PFC(hdt::IteratorUCharString *it, uint32_t blocksize, hdt::Progress
     this->blocksize = blocksize;
     this->nblocks = 0;
 
+    CSD_initialize(it,listener);
+}
+
+void CSD_PFC::CSD_initialize(hdt::IteratorUCharString *it, hdt::ProgressListener *listener){
     uint64_t reservedSize = 1024;
     text = (unsigned char*)malloc(reservedSize*sizeof(unsigned char));
 

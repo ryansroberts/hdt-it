@@ -37,6 +37,7 @@
 #include "../dictionary/PlainDictionary.hpp"
 #include "../dictionary/PFCDictionary.hpp"
 #include "../dictionary/LiteralDictionary.hpp"
+#include "../dictionary/DcompDictionary.hpp"
 
 #include "../triples/TriplesList.hpp"
 #ifndef WIN32
@@ -123,6 +124,8 @@ Dictionary *HDTFactory::readDictionary(ControlInformation &controlInformation) {
 		return new PFCDictionary();
 	} else if(type==HDTVocabulary::DICTIONARY_TYPE_LITERAL) {
 		return new LiteralDictionary();
+	} else if(type==HDTVocabulary::DICTIONARY_TYPE_DCOMP) {
+		return new DcompDictionary();
 	}
 
 	throw "Dictionary Implementation not available";

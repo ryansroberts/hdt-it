@@ -32,7 +32,7 @@ RDFParserPull *RDFParserPull::getParserPull(const char *fileName, RDFNotation no
 
 
 RDFParserCallback *RDFParserCallback::getParserCallback(RDFNotation notation) {
-#if 0
+#if USE_RAPTOR
 	return new RDFParserRaptorCallback();
 #else
 	if(notation==NTRIPLES) {

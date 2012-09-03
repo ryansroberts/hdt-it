@@ -48,6 +48,7 @@ static const uint32_t HTFC = 3;
 static const uint32_t FMINDEX = 4;
 static const uint32_t REPAIRDAC = 5;
 static const uint32_t HASHHUFF = 6;
+static const uint32_t CONFURIBLANK = 7;
 
 class CSD
 {		
@@ -95,6 +96,8 @@ class CSD
     static CSD * load(istream & fp);
 
     static CSD * create(unsigned char type);
+
+    friend class CSD_ConfigurableURIBlank;
 		
   protected:
     unsigned char type; 	//! Dictionary type.
