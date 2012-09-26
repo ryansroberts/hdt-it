@@ -158,8 +158,7 @@ unsigned char * CSD_ConfigurableURIBlank::extract(uint32_t id) {
 }
 
 void CSD_ConfigurableURIBlank::freeString(const unsigned char *str) {
-	this->URIs->freeString(str);
-	this->Blanks->freeString(str);
+	delete [] str;
 }
 
 unsigned int CSD_ConfigurableURIBlank::decompress(unsigned char **dict) {
