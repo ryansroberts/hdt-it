@@ -139,10 +139,12 @@ int main(int argc, char **argv) {
 
 
 	try {
+		cout<<"creando mapeo"<<endl;
 		HDT *hdt = HDTFactory::mapHDT(inputFile.c_str());
 
+		cout<<"creado mapeo"<<endl;
 		hdt->loadOrCreateIndex();
-
+		cout<<"creado índice"<<endl;
 		ostream *out;
 		ofstream outF;
 

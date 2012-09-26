@@ -37,6 +37,7 @@
 #include "../libdcs/CSD_Cache.h"
 #include "../libdcs/CSD_Cache2.h"
 #include "../libdcs/CSD_ConfigurableURIBlank.h"
+#include "../libdcs/CSD_LiteralSplit.h"
 
 namespace hdt {
 
@@ -44,18 +45,18 @@ DcompDictionary::DcompDictionary() :
 		blocksize(8) {
 	subjects = new csd::CSD_ConfigurableURIBlank();
 	predicates = new csd::CSD_PFC();
-	objectsNotLiterals = new csd::CSD_PFC();
-	objectsLiterals = new csd::CSD_FMIndex();
-	shared = new csd::CSD_PFC();
+	objectsNotLiterals = new csd::CSD_ConfigurableURIBlank();
+	objectsLiterals = new csd::CSD_LiteralSplit();
+	shared = new csd::CSD_ConfigurableURIBlank();
 }
 
 DcompDictionary::DcompDictionary(HDTSpecification & spec) :
 		blocksize(8) {
 	subjects = new csd::CSD_ConfigurableURIBlank();
 	predicates = new csd::CSD_PFC();
-	objectsNotLiterals = new csd::CSD_PFC();
-	objectsLiterals = new csd::CSD_FMIndex();
-	shared = new csd::CSD_PFC();
+	objectsNotLiterals = new csd::CSD_ConfigurableURIBlank();
+	objectsLiterals = new csd::CSD_LiteralSplit();
+	shared = new csd::CSD_ConfigurableURIBlank();
 
 	string blockSizeStr = spec.get("dict.block.size");
 	if (blockSizeStr != "") {
@@ -82,6 +83,14 @@ csd::CSD *loadCSDSectionConfigurableURIBlank(IteratorUCharString *iterator, uint
 	csd::CSD_PFC * URIsDict = new csd::CSD_PFC(blocksize);
 	csd::CSD_PFC * BlanksDict = new csd::CSD_PFC(blocksize);
 	return new csd::CSD_ConfigurableURIBlank(URIsDict,BlanksDict,iterator,listener);
+}
+
+csd::CSD *loadCSDSectionLiteralSplit(IteratorUCharString *iterator, uint32_t blocksize,
+		ProgressListener *listener) {
+	csd::CSD_PFC * IdiomsDict = new csd::CSD_PFC(blocksize);
+	csd::CSD_PFC * TypesDict = new csd::CSD_PFC(blocksize);
+	csd::CSD_PFC * ArbitraryDict = new csd::CSD_PFC(blocksize);
+	return new csd::CSD_LiteralSplit(IdiomsDict,TypesDict,ArbitraryDict,iterator,listener);
 }
 
 /*
@@ -179,7 +188,7 @@ void DcompDictionary::load(std::istream & input, ControlInformation & ci,
 	delete shared;
 	shared = csd::CSD::load(input);
 	if (shared == NULL) {
-		shared = new csd::CSD_PFC();
+		shared = new csd::CSD_ConfigurableURIBlank();
 		throw "Could not read shared sectionsss.";
 	}
 
@@ -210,15 +219,15 @@ void DcompDictionary::load(std::istream & input, ControlInformation & ci,
 	delete objectsLiterals;
 	objectsLiterals = csd::CSD::load(input);
 	if (objectsLiterals == NULL) {
-		objectsLiterals = new csd::CSD_FMIndex();
+		objectsLiterals = new csd::CSD_LiteralSplit();
 		throw "Could not read objects Literals.";
-	}
+	};
 	objectsLiterals = new csd::CSD_Cache(objectsLiterals);
 
 	delete objectsNotLiterals;
 	objectsNotLiterals = csd::CSD::load(input);
 	if (objectsNotLiterals == NULL) {
-		objectsNotLiterals = new csd::CSD_PFC();
+		objectsNotLiterals = new csd::CSD_ConfigurableURIBlank();
 		throw "Could not read objects not Literals.";
 	}
 	objectsNotLiterals = new csd::CSD_Cache(objectsNotLiterals);
@@ -304,14 +313,14 @@ void DcompDictionary::import(Dictionary *other, ProgressListener *listener) {
 		DcompIterator litIt(itObj);
 
 		delete objectsLiterals;
-		objectsLiterals = loadCSDSectionFMIndex(&litIt, false, 4, 64, true,
-				&iListener);
+		//objectsLiterals = loadCSDSectionFMIndex(&litIt, false, 4, 64, true,&iListener);
+		objectsLiterals = loadCSDSectionLiteralSplit(&litIt, blocksize,&iListener);
 		objectsLiterals = new csd::CSD_Cache(objectsLiterals);
 		litIt.doContinue();
 
 		iListener.setRange(50, 90);
 		delete objectsNotLiterals;
-		objectsNotLiterals = loadCSDSectionPFC(&litIt, blocksize, &iListener);
+		objectsNotLiterals = loadCSDSectionConfigurableURIBlank(&litIt, blocksize, &iListener);
 		objectsNotLiterals = new csd::CSD_Cache(objectsNotLiterals);
 		delete itObj;
 
@@ -319,7 +328,7 @@ void DcompDictionary::import(Dictionary *other, ProgressListener *listener) {
 		IteratorUCharString *itShared = other->getShared();
 		delete shared;
 		iListener.setRange(90, 100);
-		shared = loadCSDSectionPFC(itShared, blocksize, &iListener);
+		shared = loadCSDSectionConfigurableURIBlank(itShared, blocksize, &iListener);
 		shared = new csd::CSD_Cache(shared);
 		delete itShared;
 
@@ -333,9 +342,9 @@ void DcompDictionary::import(Dictionary *other, ProgressListener *listener) {
 		delete shared;
 		subjects = new csd::CSD_ConfigurableURIBlank();
 		predicates = new csd::CSD_PFC();
-		objectsNotLiterals = new csd::CSD_PFC();
-		objectsLiterals = new csd::CSD_FMIndex();
-		shared = new csd::CSD_PFC();
+		objectsNotLiterals = new csd::CSD_ConfigurableURIBlank();
+		objectsLiterals = new csd::CSD_LiteralSplit();
+		shared = new csd::CSD_ConfigurableURIBlank();
 		throw e;
 	}
 }

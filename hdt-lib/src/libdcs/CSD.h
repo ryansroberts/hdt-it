@@ -49,6 +49,7 @@ static const uint32_t FMINDEX = 4;
 static const uint32_t REPAIRDAC = 5;
 static const uint32_t HASHHUFF = 6;
 static const uint32_t CONFURIBLANK = 7;
+static const uint32_t LITERALSPLIT = 8;
 
 class CSD
 {		
@@ -98,6 +99,7 @@ class CSD
     static CSD * create(unsigned char type);
 
     friend class CSD_ConfigurableURIBlank;
+    friend class CSD_LiteralSplit;
 		
   protected:
     unsigned char type; 	//! Dictionary type.

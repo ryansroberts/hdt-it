@@ -85,7 +85,7 @@ public:
 	uint64_t getSize();
 
 	/** Stores a CSD_ConfigurableURIBlank structure given a file pointer.
-	 * @fp: pointer to the file saving a CSD_FMIndex structure.
+	 * @fp: pointer to the file saving a CSD_ConfigurableURIBlank structure.
 	 * */
 	void save(ostream & fp);
 

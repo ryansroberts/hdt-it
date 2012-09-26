@@ -70,6 +70,8 @@ namespace csd{
 			 * @use_sampling: tell if the suffixes sampling will be stored or not.
 			 * @param listener
 			 **/
+			CSD_FMIndex(csd::CSD_FMIndex *copyFMIndex);
+
 			CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence=false, int bparam=40, size_t bwt_sample=64, bool use_sampling=false, hdt::ProgressListener *listener=NULL);
 
 			void CSD_initialize(hdt::IteratorUCharString *it, hdt::ProgressListener *listener=NULL);

@@ -50,6 +50,16 @@ CSD_FMIndex::CSD_FMIndex(bool sparse_bitsequence, int bparam, size_t bwt_sample,
 	this->use_sampling = use_sampling;
 }
 
+CSD_FMIndex::CSD_FMIndex(csd::CSD_FMIndex *copyFMIndex) {
+	this->type = FMINDEX;
+	this->fm_index = NULL;
+	this->separators = NULL;
+	this->sparse_bitsequence = copyFMIndex->sparse_bitsequence;
+	this->bparam = copyFMIndex->bparam;
+	this->bwt_sample = copyFMIndex->bwt_sample;
+	this->use_sampling = copyFMIndex->use_sampling;
+}
+
 CSD_FMIndex::CSD_FMIndex(hdt::IteratorUCharString *it, bool sparse_bitsequence,
 		int bparam, size_t bwt_sample, bool use_sampling,
 		hdt::ProgressListener *listener) {

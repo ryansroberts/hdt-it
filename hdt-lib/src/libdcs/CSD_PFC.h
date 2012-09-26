@@ -54,6 +54,8 @@ class CSD_PFC : public CSD
     /** General constructor **/
     CSD_PFC(uint32_t blocksize=8);
 
+    CSD_PFC(csd::CSD_PFC *copyPFC);
+
     CSD_PFC(hdt::IteratorUCharString *it, uint32_t blocksize, hdt::ProgressListener *listener=NULL);
 
     void CSD_initialize(hdt::IteratorUCharString *it, hdt::ProgressListener *listener=NULL);
