@@ -3,7 +3,7 @@ OS := $(shell uname)
 LIBCDSPATH = ../libcds-v1.0.12
 
 # Uncomment here to enable optional dependencies
-#RAPTOR_SUPPORT=true
+RAPTOR_SUPPORT=true
 #KYOTO_SUPPORT=true
 #LIBZ_SUPPORT=true
 #SERD_SUPPORT=true
